@@ -1,16 +1,18 @@
-import torch
-import cv2
-import numpy as np
-import sys
 import platform
+import sys
 import winsound
 from pathlib import Path
 
-if platform.system() == 'Windows':
+import cv2
+import numpy as np
+import torch
+
+if platform.system() == "Windows":
     import pathlib
+
     pathlib.PosixPath = pathlib.WindowsPath
 
-#YOLOv5 path
+# YOLOv5 path
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]
 if str(ROOT) not in sys.path:
@@ -21,17 +23,17 @@ from models.common import DetectMultiBackend
 from utils.general import non_max_suppression, scale_boxes
 from utils.torch_utils import select_device
 
-#model
-weights_path = ROOT / 'best.pt'
-device = select_device('0' if torch.cuda.is_available() else 'cpu')
+# model
+weights_path = ROOT / "best.pt"
+device = select_device("0" if torch.cuda.is_available() else "cpu")
 model = DetectMultiBackend(str(weights_path), device=device)
 stride, class_names, is_pt = model.stride, model.names, model.pt
 img_size = (640, 640)
 model.warmup(imgsz=(1, 3, *img_size))
 
-#input
+# input
 cap = cv2.VideoCapture(0)
-#cap = cv2.VideoCapture(str(ROOT / 'Safety Meets Comfort.mp4'))
+# cap = cv2.VideoCapture(str(ROOT / 'Safety Meets Comfort.mp4'))
 
 while True:
     ret, frame = cap.read()
@@ -63,21 +65,19 @@ while True:
                 x1, y1, x2, y2 = map(int, xyxy)
 
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(frame, label, (x1, y1 - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-                if 'helmet' in cls_name.lower():
+                if "helmet" in cls_name.lower():
                     helmet_found = True
 
     # Alert if no helmet
     if not helmet_found:
-        cv2.putText(frame, "No Helmet Detected!", (30, 50),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+        cv2.putText(frame, "No Helmet Detected!", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
         winsound.Beep(1000, 500)
 
     # Show output
-    cv2.imshow('Helmet Detection', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    cv2.imshow("Helmet Detection", frame)
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
 cap.release()
