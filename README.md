@@ -92,22 +92,6 @@ The models were **trained separately on Google Colab** using custom datasets and
 ### How to use weights
 Download the trained weights and pass them via command line:
 
-├── fire_det.py
-├── helmet_det.py
-├── train.py
-├── val.py
-│
-├── models/
-├── utils/
-├── classify/
-├── segment/
-│
-├── data/
-│   ├── fire.yaml
-│   └── helmet.yaml
-│
-├── requirements.txt
-└── .gitignore
 
 
 ```bash
