@@ -26,7 +26,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 try:
-    import comet_ml  # must be imported before torch (if installed)
+    import comet_ml  # must be imported before torch 
 except ImportError:
     comet_ml = None
 
